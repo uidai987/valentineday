@@ -16,7 +16,7 @@
 }
 
 body{
-  height:100vh;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -26,7 +26,7 @@ body{
   overflow:hidden;
   color:white;
   text-align:center;
-  position:relative;
+  padding:20px;
 }
 
 @keyframes gradientBG{
@@ -37,61 +37,53 @@ body{
 
 .card{
   background:rgba(255,255,255,0.15);
-  padding:60px 40px;
+  padding:40px 25px;
   border-radius:25px;
   backdrop-filter:blur(20px);
   box-shadow:0 20px 60px rgba(0,0,0,0.25);
-  width:90%;
-  max-width:650px;
-  position:relative;
-  }
+  width:100%;
+  max-width:420px;
+}
 
 h1{
   font-family:'Dancing Script',cursive;
-  font-size:45px;
-  margin-bottom:15px;
+  font-size:32px;
+  margin-bottom:10px;
 }
 
 .name{
-  font-size:24px;
-  margin-bottom:25px;
+  font-size:20px;
+  margin-bottom:20px;
 }
 
 .question{
-  font-size:22px;
-  margin:20px 0 30px 0;
+  font-size:18px;
+  margin:15px 0 25px 0;
 }
 
 button{
-  padding:12px 30px;
+  padding:12px 25px;
   border:none;
   border-radius:50px;
   font-weight:600;
   cursor:pointer;
-  transition:0.2s ease;
-  font-size:16px;
+  font-size:14px;
 }
 
 #yesBtn{
   background:white;
   color:#ff416c;
-  margin-right:20px;
-}
-
-#yesBtn:hover{
-  transform:scale(1.1);
 }
 
 #noBtn{
   background:#ff1744;
   color:white;
-  position:fixed;   /* Important change */
-  z-index:9999;     /* Bring to front */
+  position:fixed;
+  z-index:9999;
 }
 
-
 .success{
-  font-size:20px;
+  font-size:16px;
   margin-top:20px;
   line-height:1.6;
   animation:pop 0.6s ease;
@@ -123,7 +115,7 @@ button{
 
 <script>
 
-// Name from URL
+// Get name from URL
 const params = new URLSearchParams(window.location.search);
 const name = params.get("name");
 
@@ -135,19 +127,17 @@ const yesBtn = document.getElementById("yesBtn");
 const result = document.getElementById("result");
 
 const funnyTexts = [
-  "Koi aur option nahi hai 😏",
-  "Maan na to padega 😉",
-  "Naa ka koi sawaal hi nahi 😌",
-  "Itna soch kya rahi ho 😅",
-  "Yes hi better lag raha hai ❤️",
-  "Escape impossible 😜"
+  "Koi aur option nahi 😏",
+  "Maan na padega 😉",
+  "Naa allowed nahi 😌",
+  "Yes hi best hai ❤️",
+  "Escape nahi milega 😜"
 ];
 
-// Position NO button randomly
+// Move button randomly inside screen
 function moveButton(){
-  const padding = 100;
-  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
   const randomX = Math.random() * maxX;
   const randomY = Math.random() * maxY;
@@ -158,7 +148,7 @@ function moveButton(){
   noBtn.innerText = funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
 }
 
-// Detect cursor distance
+// Desktop
 document.addEventListener("mousemove", (e)=>{
   const rect = noBtn.getBoundingClientRect();
   const distance = Math.sqrt(
@@ -166,12 +156,16 @@ document.addEventListener("mousemove", (e)=>{
     Math.pow(e.clientY - (rect.top + rect.height/2),2)
   );
 
-  if(distance < 120){
+  if(distance < 90){
     moveButton();
   }
 });
 
-// Initial random position
+// Mobile
+document.addEventListener("touchstart", moveButton);
+document.addEventListener("touchmove", moveButton);
+
+// Initial position
 moveButton();
 
 // YES click
@@ -185,27 +179,14 @@ yesBtn.addEventListener("click", () => {
     <div class="success">
       ❤️ You Just Made Me The Happiest Person ❤️
       <br><br>
-
       From today, every smile of yours is my responsibility.
       Every tear of yours is my fight.
       Every dream of yours is my mission.
-      
       <br><br>
-
-      I don’t promise a perfect life…
-      But I promise effort, loyalty, respect,
-      and a love that grows stronger every single day.
-      
-      <br><br>
-
-      Thank you for choosing me 💖
-      <br><br>
-
       🌹 Happy Valentine’s Day ${name ? name : "My Love"} 🌹
     </div>
   `;
 });
-
 </script>
 
 </body>
