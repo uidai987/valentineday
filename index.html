@@ -26,6 +26,7 @@ body{
   overflow:hidden;
   color:white;
   text-align:center;
+  position:relative;
 }
 
 @keyframes gradientBG{
@@ -43,6 +44,7 @@ body{
   width:90%;
   max-width:650px;
   position:relative;
+  z-index:2;
 }
 
 h1{
@@ -54,17 +56,11 @@ h1{
 .name{
   font-size:24px;
   margin-bottom:25px;
-  opacity:0.95;
 }
 
 .question{
   font-size:22px;
   margin:20px 0 30px 0;
-}
-
-.buttons{
-  position:relative;
-  height:120px;
 }
 
 button{
@@ -73,7 +69,7 @@ button{
   border-radius:50px;
   font-weight:600;
   cursor:pointer;
-  transition:0.3s ease;
+  transition:0.2s ease;
   font-size:16px;
 }
 
@@ -85,7 +81,6 @@ button{
 
 #yesBtn:hover{
   transform:scale(1.1);
-  box-shadow:0 10px 25px rgba(255,255,255,0.5);
 }
 
 #noBtn{
@@ -105,25 +100,6 @@ button{
   from{transform:scale(0.7);opacity:0;}
   to{transform:scale(1);opacity:1;}
 }
-
-/* Floating hearts */
-.heart{
-  position:absolute;
-  font-size:24px;
-  animation:float 6s linear infinite;
-  opacity:0.7;
-}
-
-@keyframes float{
-  0%{transform:translateY(100vh);opacity:0;}
-  50%{opacity:1;}
-  100%{transform:translateY(-10vh);opacity:0;}
-}
-
-@media(max-width:600px){
-  h1{font-size:34px;}
-  .card{padding:40px 25px;}
-}
 </style>
 </head>
 
@@ -137,17 +113,16 @@ button{
     Will you be my Valentine? 😌
   </div>
 
-  <div class="buttons">
-    <button id="yesBtn">Yes ❤️</button>
-    <button id="noBtn">No 😢</button>
-  </div>
-
-  <div id="result"></div>
+  <button id="yesBtn">Yes ❤️</button>
 </div>
+
+<button id="noBtn">No 😢</button>
+
+<div id="result"></div>
 
 <script>
 
-// Get name from URL
+// Name from URL
 const params = new URLSearchParams(window.location.search);
 const name = params.get("name");
 
@@ -163,31 +138,47 @@ const funnyTexts = [
   "Maan na to padega 😉",
   "Naa ka koi sawaal hi nahi 😌",
   "Itna soch kya rahi ho 😅",
-  "Yes hi better lag raha hai ❤️"
+  "Yes hi better lag raha hai ❤️",
+  "Escape impossible 😜"
 ];
 
-let clickCount = 0;
+// Position NO button randomly
+function moveButton(){
+  const padding = 100;
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-// Make NO button escape
-noBtn.addEventListener("mouseover", () => {
-  clickCount++;
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
 
-  noBtn.innerText = funnyTexts[clickCount % funnyTexts.length];
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
 
-  const x = Math.random() * 300 - 150;
-  const y = Math.random() * 100 - 50;
+  noBtn.innerText = funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
+}
 
-  let scaleValue = 1 - clickCount * 0.05;
-  if(scaleValue < 0.5) scaleValue = 0.5;
+// Detect cursor distance
+document.addEventListener("mousemove", (e)=>{
+  const rect = noBtn.getBoundingClientRect();
+  const distance = Math.sqrt(
+    Math.pow(e.clientX - (rect.left + rect.width/2),2) +
+    Math.pow(e.clientY - (rect.top + rect.height/2),2)
+  );
 
-  noBtn.style.transform = `translate(${x}px, ${y}px) scale(${scaleValue})`;
+  if(distance < 120){
+    moveButton();
+  }
 });
 
-// YES button click
+// Initial random position
+moveButton();
+
+// YES click
 yesBtn.addEventListener("click", () => {
 
   document.querySelector(".question").style.display = "none";
-  document.querySelector(".buttons").style.display = "none";
+  yesBtn.style.display = "none";
+  noBtn.style.display = "none";
 
   result.innerHTML = `
     <div class="success">
@@ -213,19 +204,6 @@ yesBtn.addEventListener("click", () => {
     </div>
   `;
 });
-
-// Floating hearts effect
-setInterval(()=>{
-  const heart=document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML="💖";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.fontSize=(Math.random()*20+20)+"px";
-  heart.style.animationDuration=(Math.random()*3+4)+"s";
-  document.body.appendChild(heart);
-
-  setTimeout(()=>heart.remove(),7000);
-},400);
 
 </script>
 
