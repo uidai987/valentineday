@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine Surprise</title>
+<title>Valentine Surprise 💖</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 
 <style>
-
 *{
   margin:0;
   padding:0;
@@ -25,6 +24,8 @@ body{
   background-size:400% 400%;
   animation: gradientBG 12s ease infinite;
   overflow:hidden;
+  color:white;
+  text-align:center;
 }
 
 @keyframes gradientBG{
@@ -34,61 +35,78 @@ body{
 }
 
 .card{
-  position:relative;
-  padding:60px 50px;
-  width:90%;
-  max-width:550px;
-  text-align:center;
-  border-radius:25px;
   background:rgba(255,255,255,0.15);
+  padding:60px 40px;
+  border-radius:25px;
   backdrop-filter:blur(20px);
   box-shadow:0 20px 60px rgba(0,0,0,0.25);
-  color:white;
-  animation:fadeIn 1.5s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(30px);}
-  to{opacity:1;transform:translateY(0);}
+  width:90%;
+  max-width:650px;
+  position:relative;
 }
 
 h1{
   font-family:'Dancing Script',cursive;
-  font-size:48px;
+  font-size:45px;
   margin-bottom:15px;
-  text-shadow:0 0 15px rgba(255,255,255,0.6);
 }
 
 .name{
-  font-size:26px;
-  font-weight:500;
-  margin-bottom:15px;
-  color:#fff;
+  font-size:24px;
+  margin-bottom:25px;
+  opacity:0.95;
 }
 
-.message{
-  font-size:18px;
-  opacity:0.9;
-  margin-bottom:30px;
+.question{
+  font-size:22px;
+  margin:20px 0 30px 0;
+}
+
+.buttons{
+  position:relative;
+  height:120px;
 }
 
 button{
   padding:12px 30px;
   border:none;
   border-radius:50px;
-  background:white;
-  color:#ff416c;
   font-weight:600;
   cursor:pointer;
   transition:0.3s ease;
+  font-size:16px;
 }
 
-button:hover{
+#yesBtn{
+  background:white;
+  color:#ff416c;
+  margin-right:20px;
+}
+
+#yesBtn:hover{
   transform:scale(1.1);
-  box-shadow:0 10px 30px rgba(255,255,255,0.6);
+  box-shadow:0 10px 25px rgba(255,255,255,0.5);
 }
 
-/* Floating Hearts */
+#noBtn{
+  background:#ff1744;
+  color:white;
+  position:absolute;
+}
+
+.success{
+  font-size:20px;
+  margin-top:20px;
+  line-height:1.6;
+  animation:pop 0.6s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(0.7);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+/* Floating hearts */
 .heart{
   position:absolute;
   font-size:24px;
@@ -103,10 +121,9 @@ button:hover{
 }
 
 @media(max-width:600px){
-  h1{font-size:36px;}
+  h1{font-size:34px;}
   .card{padding:40px 25px;}
 }
-
 </style>
 </head>
 
@@ -115,25 +132,89 @@ button:hover{
 <div class="card">
   <h1>Happy Valentine’s Day 💖</h1>
   <div class="name" id="nameText"></div>
-  <div class="message">You make my world brighter every single day ✨</div>
-  <button onclick="showAlert()">Open My Heart 💌</button>
+
+  <div class="question">
+    Will you be my Valentine? 😌
+  </div>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+
+  <div id="result"></div>
 </div>
 
 <script>
 
-// Name from URL
+// Get name from URL
 const params = new URLSearchParams(window.location.search);
 const name = params.get("name");
 
 document.getElementById("nameText").innerHTML =
   name ? name + " ❤️" : "Someone Special ❤️";
 
-// Button message
-function showAlert(){
-  alert("I’m really lucky to have you in my life ❤️");
-}
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const result = document.getElementById("result");
 
-// Floating hearts
+const funnyTexts = [
+  "Koi aur option nahi hai 😏",
+  "Maan na to padega 😉",
+  "Naa ka koi sawaal hi nahi 😌",
+  "Itna soch kya rahi ho 😅",
+  "Yes hi better lag raha hai ❤️"
+];
+
+let clickCount = 0;
+
+// Make NO button escape
+noBtn.addEventListener("mouseover", () => {
+  clickCount++;
+
+  noBtn.innerText = funnyTexts[clickCount % funnyTexts.length];
+
+  const x = Math.random() * 300 - 150;
+  const y = Math.random() * 100 - 50;
+
+  let scaleValue = 1 - clickCount * 0.05;
+  if(scaleValue < 0.5) scaleValue = 0.5;
+
+  noBtn.style.transform = `translate(${x}px, ${y}px) scale(${scaleValue})`;
+});
+
+// YES button click
+yesBtn.addEventListener("click", () => {
+
+  document.querySelector(".question").style.display = "none";
+  document.querySelector(".buttons").style.display = "none";
+
+  result.innerHTML = `
+    <div class="success">
+      ❤️ You Just Made Me The Happiest Person ❤️
+      <br><br>
+
+      From today, every smile of yours is my responsibility.
+      Every tear of yours is my fight.
+      Every dream of yours is my mission.
+      
+      <br><br>
+
+      I don’t promise a perfect life…
+      But I promise effort, loyalty, respect,
+      and a love that grows stronger every single day.
+      
+      <br><br>
+
+      Thank you for choosing me 💖
+      <br><br>
+
+      🌹 Happy Valentine’s Day ${name ? name : "My Love"} 🌹
+    </div>
+  `;
+});
+
+// Floating hearts effect
 setInterval(()=>{
   const heart=document.createElement("div");
   heart.classList.add("heart");
