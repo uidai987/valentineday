@@ -86,8 +86,10 @@ button{
 #noBtn{
   background:#ff1744;
   color:white;
-  position:absolute;
+  position:fixed;   /* Important change */
+  z-index:9999;     /* Bring to front */
 }
+
 
 .success{
   font-size:20px;
